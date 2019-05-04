@@ -1,0 +1,18 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:st="jelly:stapler" >
+
+
+    <f:entry title="UUID (optional for iOS)" field="uuid">
+        <f:textbox placeholder="ex: f7d505fc-4633" />
+    </f:entry>
+
+    <f:block>
+        <f:checkbox field="touchId" title="Include TouchID libraries and allow mocking fingerprint authentication" />
+    </f:block>
+
+    <f:block>
+        <f:checkbox field="camera" title="Include Camera libraries and allow simulating camera captures" />
+    </f:block>
+
+</j:jelly>

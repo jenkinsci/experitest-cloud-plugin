@@ -1,0 +1,20 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:st="jelly:stapler" >
+
+    <f:entry title="Keystore Location" field="keystoreLocation">
+        <f:textbox clazz="required" placeholder="ex: /applications/privatekey.jks"/>
+    </f:entry>
+
+    <f:entry title="Keystore Password" field="keystorePassword">
+        <f:password clazz="required"/>
+    </f:entry>
+
+    <f:entry title="Key Alias" field="keyAlias">
+        <f:textbox clazz="required" placeholder="ex: expiritest-alias"/>
+    </f:entry>
+
+    <f:entry title="Key Password" field="keyPassword">
+        <f:password clazz="required"/>
+    </f:entry>
+</j:jelly>

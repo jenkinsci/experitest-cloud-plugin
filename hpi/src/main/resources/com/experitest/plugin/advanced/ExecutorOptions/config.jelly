@@ -1,0 +1,25 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:st="jelly:stapler" >
+
+
+    <f:entry title="Max Devices" field="maxDevices">
+        <f:number max="1000" default="10" placeholder="ex: 10" />
+    </f:entry>
+
+    <f:entry title="Min Devices" field="minDevices">
+        <f:number max="1000" default="1" placeholder="ex: 1" />
+    </f:entry>
+
+    <f:entry title="Ignore tests file" field="ignoreTestsFile">
+        <f:textbox placeholder="ex: a.b.c.clazzD,method1"/>
+    </f:entry>
+
+    <f:entry title="Overall execution timeout" field="overallExecTimeout">
+        <f:number min="0" default="240" placeholder="ex: 240 (in minutes)" />
+    </f:entry>
+
+    <f:entry title="Session creation timeout" field="sessionCreationTimeout">
+        <f:number min="0" default="240" placeholder="ex: 240 (in minutes)" />
+    </f:entry>
+</j:jelly>

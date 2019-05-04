@@ -1,0 +1,34 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:st="jelly:stapler">
+
+    <f:entry field="frameworkType" title="Framework Type">
+        <f:select/>
+    </f:entry>
+
+
+    <f:entry field="runningType" title="Running Type">
+        <f:select/>
+    </f:entry>
+
+    <f:entry title="Application under test" field="applicationUnderTest">
+        <f:textbox/>
+    </f:entry>
+
+    <f:entry title="Test Application" field="testApplication">
+        <f:textbox/>
+    </f:entry>
+
+    <f:entry title="Device Query" field="deviceQuery">
+        <f:textbox/>
+    </f:entry>
+
+    <f:entry title="Tests Tags" field="testsTags">
+        <f:textbox placeholder="ex: green_zone"/> <!--default is BUILD_NUMBER (jenkins)-->
+    </f:entry>
+
+    <f:advanced>
+        <f:property field="executorOptions" />
+        <!--f:optionalProperty field="keystoreInfo" title="Custom Keystore (optional for Android)"/-->
+    </f:advanced>
+</j:jelly>

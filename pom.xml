@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>hpi</module>
+    </modules>
+
+    <parent>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>plugin</artifactId>
+        <version>2.25</version>
+        <relativePath/>
+    </parent>
+
+    <artifactId>experitest-plugin-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jenkins.version>1.651.2</jenkins.version>
+        <java.level>7</java.level>
+        <jenkins-test-harness.version>2.23</jenkins-test-harness.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
+
+        <compatible.since.version>1.6</compatible.since.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
+        <repository>
+            <id>findify</id>
+            <url>https://dl.bintray.com/findify/maven/</url>
+        </repository>
+        <repository>
+            <id>maven2</id>
+            <url>http://central.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jcenter</id>
+            <url>http://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jenkins-ci.plugins</groupId>
+                <artifactId>credentials</artifactId>
+                <version>2.1.13</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mashape.unirest</groupId>
+                <artifactId>unirest-java</artifactId>
+                <version>1.4.9</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>2.8.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>pl.pojo</groupId>
+                <artifactId>pojo-tester</artifactId>
+                <version>0.7.6</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+
+                <!--plugin>
+                    <groupId>com.github.phuonghuynh</groupId>
+                    <artifactId>gitflow-maven-plugin</artifactId>
+                    <version>1.6.3</version>
+                </plugin-->
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>false</skipTests>
+                </configuration>
+            </plugin>
+
+            <!--plugin>
+                <groupId>com.github.phuonghuynh</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <configuration>
+                    <skipTestProject>true</skipTestProject>
+                    <releaseRebase>true</releaseRebase>
+                    <gitFlowConfig>
+                        <productionBranch>master</productionBranch>
+                        <developmentBranch>master</developmentBranch>
+                        <releaseBranchPrefix>release-</releaseBranchPrefix>
+                        <versionTagPrefix>v</versionTagPrefix>
+                    </gitFlowConfig>
+                    <releaseFinish>
+                        <preProductionMergeGoals>clean install deploy:deploy</preProductionMergeGoals>
+                    </releaseFinish>
+                </configuration>
+            </plugin-->
+
+            <plugin>
+                <groupId>org.jenkins-ci.tools</groupId>
+                <artifactId>maven-hpi-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <compatibleSinceVersion>${compatible.since.version}</compatibleSinceVersion>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>display-info</id>
+                        <configuration>
+                            <rules>
+                                <enforceBytecodeVersion>
+                                    <excludes combine.children="append">
+                                        <exclude>org.projectlombok:lombok</exclude>
+                                    </excludes>
+                                </enforceBytecodeVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>animal-sniffer-maven-plugin</artifactId>
+                <configuration>
+                    <excludeDependencies combine.children="append">
+                        <excludeDependency>org.projectlombok:lombok</excludeDependency>
+                    </excludeDependencies>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- for running integration test if needed, disabled by default -->
+            <id>it</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <maven.test.skip>false</maven.test.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+    </profiles>
+</project>

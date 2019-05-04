@@ -1,0 +1,13 @@
+.idea/
+*.iml
+target/
+work/
+
+TestIgnoreMe.java
+test-android.apk
+.ignoreme
+*-test
+*.tf
+*.tfvars
+Jenkins support for XCUITest and Espresso.pdf
+DALT-ManageTestRunwiththeAPI-300119-0823-619.pdf
