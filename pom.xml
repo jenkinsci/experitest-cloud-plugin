@@ -15,7 +15,7 @@
         <relativePath/>
     </parent>
 
-    <artifactId>experitest-plugin-parent</artifactId>
+    <artifactId>experitest-plugin</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
