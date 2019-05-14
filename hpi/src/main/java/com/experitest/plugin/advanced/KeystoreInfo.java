@@ -6,6 +6,7 @@ import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.util.Secret;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -22,17 +23,17 @@ import java.io.Serializable;
 public class KeystoreInfo extends AbstractDescribableImpl<KeystoreInfo> implements Serializable, ApiField {
 
     private String keystoreLocation;
-    private String keystorePassword;
+    private Secret keystorePassword;
     private String keyAlias;
-    private String keyPassword;
+    private Secret keyPassword;
 
     @DataBoundConstructor
     public KeystoreInfo(String keystoreLocation, String keystorePassword, String keyAlias, String keyPassword) {
         this();
         this.keystoreLocation = keystoreLocation;
-        this.keystorePassword = keystorePassword;
+        this.keystorePassword = Secret.fromString(keystorePassword);
         this.keyAlias = keyAlias;
-        this.keyPassword = keyPassword;
+        this.keyPassword = Secret.fromString(keyPassword);
     }
 
     public KeystoreInfo() {
@@ -55,7 +56,7 @@ public class KeystoreInfo extends AbstractDescribableImpl<KeystoreInfo> implemen
             throw new IllegalConfigException("Keystore not found, path= %s", this.keystoreLocation);
         }
 
-        if (StringUtils.isBlank(this.keystorePassword)) {
+        if (StringUtils.isBlank(this.keystorePassword.getPlainText())) {
             throw new IllegalConfigException("Field keystorePassword is blank");
         }
 
@@ -63,7 +64,7 @@ public class KeystoreInfo extends AbstractDescribableImpl<KeystoreInfo> implemen
             throw new IllegalConfigException("Field keyAlias is blank");
         }
 
-        if (StringUtils.isBlank(this.keyPassword)) {
+        if (StringUtils.isBlank(this.keyPassword.getPlainText())) {
             throw new IllegalConfigException("Field keyPassword is blank");
         }
     }
