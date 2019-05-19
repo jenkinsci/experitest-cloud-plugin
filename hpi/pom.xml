@@ -18,6 +18,7 @@
 
     <artifactId>experitest-cloud</artifactId>
     <packaging>hpi</packaging>
+    <version>${project.parent.version}</version>
 
     <scm>
         <connection>scm:git:ssh://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
