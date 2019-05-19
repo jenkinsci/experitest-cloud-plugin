@@ -11,7 +11,7 @@
         <f:select/>
     </f:entry>
 
-    <f:entry title="Application under test" field="applicationUnderTest">
+    <f:entry title="Application under test" field="app">
         <f:textbox/>
     </f:entry>
 
@@ -19,7 +19,7 @@
         <f:textbox/>
     </f:entry>
 
-    <f:entry title="Device Query" field="deviceQuery">
+    <f:entry title="Device Query" field="deviceQueries">
         <f:textbox/>
     </f:entry>
 

@@ -35,20 +35,20 @@ public class ExecutorBuildStep extends Builder implements Serializable {
 
     private String frameworkType;
     private String runningType;
-    private String applicationUnderTest;
+    private String app;
     private String testApplication;
-    private String deviceQuery;
+    private String deviceQueries;
     private String runTags;
     private ExecutorOptions executorOptions;
 
     @DataBoundConstructor
-    public ExecutorBuildStep(String frameworkType, String runningType, String applicationUnderTest, String testApplication, String deviceQuery, String runTags, ExecutorOptions executorOptions) {
+    public ExecutorBuildStep(String frameworkType, String runningType, String app, String testApplication, String deviceQueries, String runTags, ExecutorOptions executorOptions) {
         this();
         this.frameworkType = frameworkType;
         this.runningType = runningType;
-        this.applicationUnderTest = applicationUnderTest;
+        this.app = app;
         this.testApplication = testApplication;
-        this.deviceQuery = deviceQuery;
+        this.deviceQueries = deviceQueries;
         this.runTags = runTags;
         this.executorOptions = executorOptions;
     }
@@ -67,11 +67,11 @@ public class ExecutorBuildStep extends Builder implements Serializable {
         String secret = String.format("Bearer %s", cred.getSecretKey().getPlainText());
         MultipartBody body = Unirest.post(appApiUrl)
             .header("authorization", secret)
-            .field("app", new File(this.applicationUnderTest))
+            .field("app", new File(this.app))
             .field("testApp", new File(this.testApplication))
             .field("executionType", this.frameworkType)
             .field("runningType", this.runningType)
-            .field("deviceQueries", this.deviceQuery);
+            .field("deviceQueries", this.deviceQueries);
 
         if (StringUtils.isNotBlank(this.runTags)) {
             body.field("runTags", this.runTags);
