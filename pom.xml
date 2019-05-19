@@ -141,14 +141,14 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.jenkins-ci.tools</groupId>
-                <artifactId>maven-hpi-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <compatibleSinceVersion>${compatible.since.version}</compatibleSinceVersion>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.jenkins-ci.tools</groupId>-->
+<!--                <artifactId>maven-hpi-plugin</artifactId>-->
+<!--                <extensions>true</extensions>-->
+<!--                <configuration>-->
+<!--                    <compatibleSinceVersion>${compatible.since.version}</compatibleSinceVersion>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
 
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
