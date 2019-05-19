@@ -114,32 +114,32 @@
             </plugins>
         </pluginManagement>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skipTests>false</skipTests>
-                </configuration>
-            </plugin>
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <skipTests>false</skipTests>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
 
-            <plugin>
-                <groupId>com.github.phuonghuynh</groupId>
-                <artifactId>gitflow-maven-plugin</artifactId>
-                <configuration>
-                    <skipTestProject>true</skipTestProject>
-                    <releaseRebase>true</releaseRebase>
-                    <gitFlowConfig>
-                        <productionBranch>master</productionBranch>
-                        <developmentBranch>master</developmentBranch>
-                        <releaseBranchPrefix>release-</releaseBranchPrefix>
-                        <versionTagPrefix>v</versionTagPrefix>
-                    </gitFlowConfig>
-                    <releaseFinish>
-                        <preProductionMergeGoals>clean install deploy:deploy</preProductionMergeGoals>
-                    </releaseFinish>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>com.github.phuonghuynh</groupId>-->
+<!--                <artifactId>gitflow-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <skipTestProject>true</skipTestProject>-->
+<!--                    <releaseRebase>true</releaseRebase>-->
+<!--                    <gitFlowConfig>-->
+<!--                        <productionBranch>master</productionBranch>-->
+<!--                        <developmentBranch>master</developmentBranch>-->
+<!--                        <releaseBranchPrefix>release-</releaseBranchPrefix>-->
+<!--                        <versionTagPrefix>v</versionTagPrefix>-->
+<!--                    </gitFlowConfig>-->
+<!--                    <releaseFinish>-->
+<!--                        <preProductionMergeGoals>clean install deploy:deploy</preProductionMergeGoals>-->
+<!--                    </releaseFinish>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
 
 <!--            <plugin>-->
 <!--                <groupId>org.jenkins-ci.tools</groupId>-->
@@ -150,33 +150,33 @@
 <!--                </configuration>-->
 <!--            </plugin>-->
 
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>display-info</id>
-                        <configuration>
-                            <rules>
-                                <enforceBytecodeVersion>
-                                    <excludes combine.children="append">
-                                        <exclude>org.projectlombok:lombok</exclude>
-                                    </excludes>
-                                </enforceBytecodeVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <artifactId>maven-enforcer-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>display-info</id>-->
+<!--                        <configuration>-->
+<!--                            <rules>-->
+<!--                                <enforceBytecodeVersion>-->
+<!--                                    <excludes combine.children="append">-->
+<!--                                        <exclude>org.projectlombok:lombok</exclude>-->
+<!--                                    </excludes>-->
+<!--                                </enforceBytecodeVersion>-->
+<!--                            </rules>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <configuration>
-                    <excludeDependencies combine.children="append">
-                        <excludeDependency>org.projectlombok:lombok</excludeDependency>
-                    </excludeDependencies>
-                </configuration>
-            </plugin>
-        </plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>animal-sniffer-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <excludeDependencies combine.children="append">-->
+<!--                        <excludeDependency>org.projectlombok:lombok</excludeDependency>-->
+<!--                    </excludeDependencies>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
     </build>
 </project>
