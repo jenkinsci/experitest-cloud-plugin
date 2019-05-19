@@ -23,8 +23,8 @@
         <f:textbox/>
     </f:entry>
 
-    <f:entry title="Tests Tags" field="testsTags">
-        <f:textbox placeholder="ex: green_zone"/> <!--default is BUILD_NUMBER (jenkins)-->
+    <f:entry title="Run Tags" field="runTags">
+        <f:textbox placeholder="ex: {&quot;ApplicationName&quot;: &quot;eriBank&quot;, &quot;AppVersion&quot;: &quot;11.2&quot;, &quot;os&quot;: &quot;android&quot;}"/> <!--default is BUILD_NUMBER (jenkins)-->
     </f:entry>
 
     <f:advanced>

@@ -73,12 +73,9 @@ public class ExecutorBuildStep extends Builder implements Serializable {
             .field("runningType", this.runningType)
             .field("deviceQueries", this.deviceQuery);
 
-//        if (StringUtils.isNotBlank(this.runTags)) {
-//            body.field("runTags", this.runTags);
-//        }
-//        else {
-//            body.field("runTags", String.format("build.number=%s", build.getNumber()));
-//        }
+        if (StringUtils.isNotBlank(this.runTags)) {
+            body.field("runTags", this.runTags);
+        }
 
         Utils.applyFields(body, this.executorOptions);
         boolean result =  Utils.postBody(body, listener.getLogger());
