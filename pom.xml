@@ -18,7 +18,7 @@
     <artifactId>experitest-cloud-parent</artifactId>
     <name>Experitest Cloud Parent (POM)</name>
     <packaging>pom</packaging>
-    <version>1.0-beta-2</version>
+    <version>1.0-beta-3</version>
 
     <properties>
         <jenkins.version>1.651.2</jenkins.version>
