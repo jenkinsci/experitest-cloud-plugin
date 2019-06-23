@@ -34,25 +34,28 @@ public class ExperitestCredentials extends BaseStandardCredentials implements St
 
     private String apiUrl;
     private Secret secretKey;
+    private String name;
 
     @DataBoundConstructor
     public ExperitestCredentials(
         @CheckForNull CredentialsScope scope,
-        @CheckForNull String id,
-        @Nullable String description,
+        @Nullable String name,
         @CheckForNull String apiUrl,
-        @CheckForNull String secretKey
-    ) {
+        @CheckForNull String secretKey,
+        @CheckForNull String id,
+        @Nullable String description
+        ) {
         super(scope, id, description);
 
+        this.name = name;
         this.apiUrl = apiUrl;
         this.secretKey = Secret.fromString(secretKey);
 
         this.validate();
     }
 
-    public ExperitestCredentials(String description, String apiUrl, Secret secretKey) {
-        this(CredentialsScope.GLOBAL, UUID.randomUUID().toString(), description, apiUrl, secretKey.getPlainText());
+    public ExperitestCredentials(String name, String apiUrl, Secret secretKey, String description) { //String description, String apiUrl, Secret secretKey, String name) {
+        this(CredentialsScope.GLOBAL, name, apiUrl, secretKey.getPlainText(), UUID.randomUUID().toString(), description);// UUID.randomUUID().toString(), );//description, apiUrl, secretKey.getPlainText(), name);
     }
 
     private void validate() {
@@ -65,7 +68,7 @@ public class ExperitestCredentials extends BaseStandardCredentials implements St
             String url = new URI(this.apiUrl).normalize().toString();
             return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Illegal ApiUrl (URISyntaxException)", e);
+            throw new IllegalArgumentException("Invalid ApiUrl (URISyntaxException)", e);
         }
     }
 
@@ -74,7 +77,7 @@ public class ExperitestCredentials extends BaseStandardCredentials implements St
             URL url = new URL(this.getApiUrlNormalize());
             return url.getHost();
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Illegal ApiUrl (MalformedURLException)", e);
+            throw new IllegalArgumentException("Invalid ApiUrl (MalformedURLException)", e);
         }
     }
 
@@ -109,7 +112,7 @@ public class ExperitestCredentials extends BaseStandardCredentials implements St
         @Nonnull
         @Override
         public String getName(@Nonnull ExperitestCredentials creds) {
-            return creds.getApiHostname();
+            return creds.getName();
         }
     }
 }

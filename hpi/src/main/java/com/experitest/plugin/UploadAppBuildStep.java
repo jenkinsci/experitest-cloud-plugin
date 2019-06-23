@@ -7,7 +7,9 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import lombok.Getter;
@@ -25,8 +27,6 @@ import java.io.Serializable;
 @Setter
 @ExportedBean
 public class UploadAppBuildStep extends Builder implements Serializable {
-
-    private static final Log LOG = Log.get(UploadAppBuildStep.class);
 
     private String applicationLocation;
     private KeystoreInfo keystoreInfo;
