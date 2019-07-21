@@ -4,3 +4,4 @@ You can
  1. Upload your application to Experitest cloud using a simple build step
  2. Execute XCUItest and Espresso tests easily 
 
+From [root/hpi], run mvn clean install hpi:run -Djetty.port=8080 to start test jenkins at port 8080
