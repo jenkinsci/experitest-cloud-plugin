@@ -5,5 +5,6 @@ import com.mashape.unirest.request.body.MultipartBody;
 
 public interface ApiField {
     void apply(MultipartBody body);
+
     void validate() throws IllegalConfigException;
 }

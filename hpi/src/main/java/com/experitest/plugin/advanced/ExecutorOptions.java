@@ -1,6 +1,5 @@
 package com.experitest.plugin.advanced;
 
-
 import com.experitest.plugin.ApiField;
 import com.experitest.plugin.Utils;
 import com.experitest.plugin.error.IllegalConfigException;
@@ -8,16 +7,11 @@ import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.Serializable;
 
-
-@Getter
-@Setter
 public class ExecutorOptions extends AbstractDescribableImpl<ExecutorOptions> implements Serializable, ApiField {
 
     private Integer maxDevices;
@@ -52,13 +46,51 @@ public class ExecutorOptions extends AbstractDescribableImpl<ExecutorOptions> im
         }
     }
 
+    public Integer getMaxDevices() {
+        return maxDevices;
+    }
+
+    public void setMaxDevices(Integer maxDevices) {
+        this.maxDevices = maxDevices;
+    }
+
+    public Integer getMinDevices() {
+        return minDevices;
+    }
+
+    public void setMinDevices(Integer minDevices) {
+        this.minDevices = minDevices;
+    }
+
+    public String getIgnoreTestsFile() {
+        return ignoreTestsFile;
+    }
+
+    public void setIgnoreTestsFile(String ignoreTestsFile) {
+        this.ignoreTestsFile = ignoreTestsFile;
+    }
+
+    public Integer getOverallExecTimeout() {
+        return overallExecTimeout;
+    }
+
+    public void setOverallExecTimeout(Integer overallExecTimeout) {
+        this.overallExecTimeout = overallExecTimeout;
+    }
+
+    public Integer getCreationTimeout() {
+        return creationTimeout;
+    }
+
+    public void setCreationTimeout(Integer creationTimeout) {
+        this.creationTimeout = creationTimeout;
+    }
+
     @Override
     public void validate() throws IllegalConfigException {
-
     }
 
     @Extension
     public static class DescriptionImpl extends Descriptor<ExecutorOptions> {
-
     }
 }

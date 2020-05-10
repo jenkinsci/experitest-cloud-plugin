@@ -5,16 +5,12 @@ import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.ExportedBean;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
 @ExportedBean
 public class ExtraArguments extends AbstractDescribableImpl<ExtraArguments> implements Serializable, ApiField {
     private boolean touchId;
@@ -41,6 +37,31 @@ public class ExtraArguments extends AbstractDescribableImpl<ExtraArguments> impl
             body.field("uuid", this.uuid);
         }
     }
+
+    public boolean isTouchId() {
+        return touchId;
+    }
+
+    public void setTouchId(boolean touchId) {
+        this.touchId = touchId;
+    }
+
+    public boolean isCamera() {
+        return camera;
+    }
+
+    public void setCamera(boolean camera) {
+        this.camera = camera;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public void validate() {
     }

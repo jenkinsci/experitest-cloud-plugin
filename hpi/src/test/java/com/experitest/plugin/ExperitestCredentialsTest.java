@@ -1,4 +1,4 @@
-package com.experitest.plugin.it;
+package com.experitest.plugin;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.experitest.plugin.ExperitestCredentials;
@@ -9,18 +9,18 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.*;
 import hudson.model.Item;
 import hudson.security.ACL;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.ThrowableAssert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.List;
 
-public class ExperitestCredentialsIT {
+public class ExperitestCredentialsTest {
 
     @Rule
     public JenkinsRule jenkinsRule = new JenkinsRule();
@@ -41,7 +41,7 @@ public class ExperitestCredentialsIT {
         this.page = webClient.goTo("credentials/store/system/domain/_/newCredentials");
         this.credSelect = (HtmlSelect)this.page.getElementsByTagName("select").get(0);
         List<?> creds = credSelect.getByXPath("//option[contains(.,'" + Messages.credentialsDisplayName() +"')]");
-        Assertions.assertThat(creds.size()).isEqualTo(1);
+        Assert.assertEquals(1, creds.size());
 
         this.option = (HtmlOption) creds.get(0);
         option.setSelected(true);
@@ -59,20 +59,24 @@ public class ExperitestCredentialsIT {
         okButton.click();
 
         List<ExperitestCredentials> credentials = CredentialsProvider.lookupCredentials(ExperitestCredentials.class, (Item) null, ACL.SYSTEM, null, null);
-        Assertions.assertThat(credentials.size()).isEqualTo(1);
+        Assert.assertEquals(1, credentials.size());
     }
 
-    @Test
-    public void shouldNotSaved() {
-        final HtmlButton okButton = (HtmlButton) this.page.getByXPath("//button[contains(.,'OK')]").get(0);
-        Assertions.assertThatThrownBy(new ThrowableAssert.ThrowingCallable() {
-            @Override
-            public void call() throws Throwable {
-                okButton.click();
-            }
-        }).isInstanceOf(FailingHttpStatusCodeException.class);
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 
-        List<ExperitestCredentials> credentials = CredentialsProvider.lookupCredentials(ExperitestCredentials.class, (Item) null, ACL.SYSTEM, null, null);
-        Assertions.assertThat(credentials.size()).isEqualTo(0);
+    @Test
+    public void shouldNotSaved() throws IOException {
+        exceptionRule.expect(FailingHttpStatusCodeException.class);
+
+        final HtmlButton okButton = (HtmlButton) this.page.getByXPath("//button[contains(.,'OK')]").get(0);
+        try {
+            okButton.click();
+        } finally { // we need to check the creds when exception is thrown
+            List<ExperitestCredentials> credentials = CredentialsProvider.lookupCredentials(ExperitestCredentials.class, (Item) null, ACL.SYSTEM, null, null);
+            Assert.assertEquals(0, credentials.size());
+        }
+
+
     }
 }

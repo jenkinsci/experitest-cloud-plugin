@@ -1,15 +1,16 @@
 package com.experitest.plugin.enu;
 
-import lombok.Getter;
-
-@Getter
 public enum  RunningType {
-    FastFeedback("Fast Feedback"),
-    Coverage("Coverage");
+    FAST_FEEDBACK("FastFeedback"),
+    COVERAGE("Coverage");
 
-    private String label;
+    private final String label;
 
     RunningType(String label) {
         this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

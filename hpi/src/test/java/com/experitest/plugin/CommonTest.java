@@ -1,6 +1,6 @@
 package com.experitest.plugin;
 
-import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.URI;
@@ -12,6 +12,6 @@ public class CommonTest {
     public void testUrlNormalize() throws URISyntaxException {
         String url = "https://test.com///";
         String normalize = new URI(url).normalize().toString();
-        Assertions.assertThat(normalize).isEqualToIgnoringCase("https://test.com/");
+        Assert.assertEquals("https://test.com/", normalize.toLowerCase());
     }
 }

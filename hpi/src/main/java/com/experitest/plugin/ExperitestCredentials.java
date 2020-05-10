@@ -8,27 +8,19 @@ import hudson.Extension;
 import hudson.model.Item;
 import hudson.security.ACL;
 import hudson.util.Secret;
-import lombok.Getter;
-import lombok.Setter;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.Asserts;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.UUID;
 
-
-@Getter
-@Setter
 @NameWith(value = ExperitestCredentials.NameProvider.class, priority = 1)
 public class ExperitestCredentials extends BaseStandardCredentials implements StandardCredentials {
 
@@ -53,6 +45,22 @@ public class ExperitestCredentials extends BaseStandardCredentials implements St
 
     public ExperitestCredentials(String description, String apiUrl, Secret secretKey) {
         this(CredentialsScope.GLOBAL, UUID.randomUUID().toString(), description, apiUrl, secretKey.getPlainText());
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public void setApiUrl(String apiUrl) {
+        this.apiUrl = apiUrl;
+    }
+
+    public Secret getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(Secret secretKey) {
+        this.secretKey = secretKey;
     }
 
     private void validate() {

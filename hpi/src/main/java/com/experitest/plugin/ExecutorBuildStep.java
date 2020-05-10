@@ -13,25 +13,20 @@ import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.ListBoxModel;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.ExportedBean;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
-@Getter
-@Setter
 @ExportedBean
 public class ExecutorBuildStep extends Builder implements Serializable {
 
     private static final Log LOG = Log.get(ExecutorBuildStep.class);
-
 
     private String frameworkType;
     private String runningType;
@@ -57,21 +52,47 @@ public class ExecutorBuildStep extends Builder implements Serializable {
         super();
     }
 
+    public String getFrameworkType() {
+        return frameworkType;
+    }
+
+    public String getRunningType() {
+        return runningType;
+    }
+
+    public String getApp() {
+        return app;
+    }
+
+    public String getTestApplication() {
+        return testApplication;
+    }
+
+    public String getDeviceQueries() {
+        return deviceQueries;
+    }
+
+    public String getRunTags() {
+        return runTags;
+    }
+
+    public ExecutorOptions getExecutorOptions() {
+        return executorOptions;
+    }
+
     @Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-
+    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException {
         ExperitestCredentials cred = Utils.getExperitestCredentials(build);
-
         String baseUrl = cred.getApiUrlNormalize();
         String appApiUrl = String.format("%s/api/v1/test-run/execute-test-run", baseUrl);
         String secret = String.format("Bearer %s", cred.getSecretKey().getPlainText());
         MultipartBody body = Unirest.post(appApiUrl)
-            .header("authorization", secret)
+            .header(AUTHORIZATION, secret)
+            .queryString("executionType", FrameworkType.valueOf(this.frameworkType).getLabel())
+            .queryString("runningType", RunningType.valueOf(this.runningType).getLabel())
+            .queryString("deviceQueries", this.deviceQueries)
             .field("app", new File(this.app))
-            .field("testApp", new File(this.testApplication))
-            .field("executionType", this.frameworkType)
-            .field("runningType", this.runningType)
-            .field("deviceQueries", this.deviceQueries);
+            .field("testApp", new File(this.testApplication));
 
         if (StringUtils.isNotBlank(this.runTags)) {
             body.field("runTags", this.runTags);

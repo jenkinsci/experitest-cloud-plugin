@@ -1,15 +1,7 @@
 package com.experitest.plugin;
 
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import com.experitest.plugin.advanced.ExtraArguments;
-import com.experitest.plugin.advanced.KeystoreInfo;
-import com.experitest.plugin.error.ApiException;
-import com.experitest.plugin.error.IllegalConfigException;
 import com.experitest.plugin.i18n.Messages;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
@@ -19,25 +11,14 @@ import hudson.model.Item;
 import hudson.security.ACL;
 import hudson.tasks.BuildWrapper;
 import hudson.util.ListBoxModel;
-import lombok.Getter;
-import lombok.Setter;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.ExportedBean;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
 
-@Getter
-@Setter
 @ExportedBean
 public class ExperitestEnv extends BuildWrapper implements Serializable {
 
@@ -62,11 +43,19 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
         super();
     }
 
+    public String getCredentialsId() {
+        return credentialsId;
+    }
+
+    public void setCredentialsId(String credentialsId) {
+        this.credentialsId = credentialsId;
+    }
+
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) {
         return new Environment() {
             @Override
-            public boolean tearDown(AbstractBuild build, BuildListener listener) throws InterruptedException {
+            public boolean tearDown(AbstractBuild build, BuildListener listener) {
                 return true;
             }
         };

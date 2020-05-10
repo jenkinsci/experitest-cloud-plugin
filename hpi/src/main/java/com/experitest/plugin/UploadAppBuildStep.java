@@ -10,19 +10,13 @@ import hudson.Launcher;
 import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.ExportedBean;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 
-
-@Getter
-@Setter
 @ExportedBean
 public class UploadAppBuildStep extends Builder implements Serializable {
 
@@ -49,7 +43,8 @@ public class UploadAppBuildStep extends Builder implements Serializable {
     }
 
     @Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
+        throws InterruptedException {
         ExperitestCredentials cred = Utils.getExperitestCredentials(build);
         File f = new File(this.applicationLocation);
         String baseUrl = cred.getApiUrlNormalize();
@@ -59,11 +54,34 @@ public class UploadAppBuildStep extends Builder implements Serializable {
             .header("authorization", secret)
             .field("file", f);
 
-
-        Utils.applyFields(body, this.extraArguments,  this.keystoreInfo);
-        boolean result =  Utils.postBody(body, listener.getLogger());
+        Utils.applyFields(body, this.extraArguments, this.keystoreInfo);
+        boolean result = Utils.postBody(body, listener.getLogger());
         listener.getLogger().println("Result= " + result);
         return result;
+    }
+
+    public String getApplicationLocation() {
+        return applicationLocation;
+    }
+
+    public void setApplicationLocation(String applicationLocation) {
+        this.applicationLocation = applicationLocation;
+    }
+
+    public KeystoreInfo getKeystoreInfo() {
+        return keystoreInfo;
+    }
+
+    public void setKeystoreInfo(KeystoreInfo keystoreInfo) {
+        this.keystoreInfo = keystoreInfo;
+    }
+
+    public ExtraArguments getExtraArguments() {
+        return extraArguments;
+    }
+
+    public void setExtraArguments(ExtraArguments extraArguments) {
+        this.extraArguments = extraArguments;
     }
 
     @Extension
@@ -80,6 +98,4 @@ public class UploadAppBuildStep extends Builder implements Serializable {
             return true;
         }
     }
-
-
 }

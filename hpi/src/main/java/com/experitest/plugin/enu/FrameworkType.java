@@ -1,15 +1,16 @@
 package com.experitest.plugin.enu;
 
-import lombok.Getter;
-
-
-@Getter
 public enum  FrameworkType {
-    XCUITest("XCUITest"), Espresso("Espresso");
+    XCUI_TEST("XCUITest"),
+    ESPRESSO("Espresso");
 
-    private String label;
+    private final String label;
 
     FrameworkType(String label) {
         this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

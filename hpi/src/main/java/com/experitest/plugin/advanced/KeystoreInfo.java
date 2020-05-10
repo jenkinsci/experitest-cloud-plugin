@@ -7,8 +7,6 @@ import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.Secret;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -16,9 +14,6 @@ import org.kohsuke.stapler.export.ExportedBean;
 import java.io.File;
 import java.io.Serializable;
 
-
-@Getter
-@Setter
 @ExportedBean
 public class KeystoreInfo extends AbstractDescribableImpl<KeystoreInfo> implements Serializable, ApiField {
 
@@ -46,6 +41,38 @@ public class KeystoreInfo extends AbstractDescribableImpl<KeystoreInfo> implemen
             .field("keystorePassword", this.keystorePassword)
             .field("keyAlias", this.keyAlias)
             .field("keyPassword", this.keyPassword);
+    }
+
+    public String getKeystoreLocation() {
+        return keystoreLocation;
+    }
+
+    public void setKeystoreLocation(String keystoreLocation) {
+        this.keystoreLocation = keystoreLocation;
+    }
+
+    public Secret getKeystorePassword() {
+        return keystorePassword;
+    }
+
+    public void setKeystorePassword(Secret keystorePassword) {
+        this.keystorePassword = keystorePassword;
+    }
+
+    public String getKeyAlias() {
+        return keyAlias;
+    }
+
+    public void setKeyAlias(String keyAlias) {
+        this.keyAlias = keyAlias;
+    }
+
+    public Secret getKeyPassword() {
+        return keyPassword;
+    }
+
+    public void setKeyPassword(Secret keyPassword) {
+        this.keyPassword = keyPassword;
     }
 
     @Override

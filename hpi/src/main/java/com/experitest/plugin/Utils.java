@@ -2,27 +2,29 @@ package com.experitest.plugin;
 
 import com.experitest.plugin.error.ApiException;
 import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.body.MultipartBody;
 import hudson.model.AbstractBuild;
-import hudson.model.Build;
 import hudson.model.Describable;
 import hudson.model.Project;
 import hudson.util.DescribableList;
 
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 
 public class Utils {
 
+    private Utils() {
+        throw new IllegalStateException("Utils is a utility class");
+    }
+
     public static boolean postBody(MultipartBody body, PrintStream logger) throws ApiException {
         try {
+            Unirest.setTimeouts(0, 0); //set infinite timeout for post request
             HttpResponse<String> response = body.asString();
             logger.printf("Cloud response: %s%n", response.getBody());
             return response.getStatus() >= 200 && response.getStatus() < 300;
-        }
-        catch (UnirestException e) {
+        } catch (UnirestException e) {
             logger.printf("API Error: %s", e.getMessage());
             throw new ApiException(e);
         }
