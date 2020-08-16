@@ -1,7 +1,6 @@
 package com.experitest.plugin;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.experitest.plugin.ExperitestCredentials;
 import com.experitest.plugin.i18n.Messages;
 import com.gargoylesoftware.htmlunit.AjaxController;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
@@ -22,12 +21,12 @@ import java.util.List;
 
 public class ExperitestCredentialsTest {
 
+    private HtmlPage page;
+
     @Rule
     public JenkinsRule jenkinsRule = new JenkinsRule();
-
-    private HtmlPage page;
-    private HtmlSelect credSelect;
-    private HtmlOption option;
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void before() throws IOException, SAXException {
@@ -39,11 +38,11 @@ public class ExperitestCredentialsTest {
         });
 
         this.page = webClient.goTo("credentials/store/system/domain/_/newCredentials");
-        this.credSelect = (HtmlSelect)this.page.getElementsByTagName("select").get(0);
+        HtmlSelect credSelect = (HtmlSelect) this.page.getElementsByTagName("select").get(0);
         List<?> creds = credSelect.getByXPath("//option[contains(.,'" + Messages.credentialsDisplayName() +"')]");
         Assert.assertEquals(1, creds.size());
 
-        this.option = (HtmlOption) creds.get(0);
+        HtmlOption option = (HtmlOption) creds.get(0);
         option.setSelected(true);
     }
 
@@ -62,9 +61,6 @@ public class ExperitestCredentialsTest {
         Assert.assertEquals(1, credentials.size());
     }
 
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
-
     @Test
     public void shouldNotSaved() throws IOException {
         exceptionRule.expect(FailingHttpStatusCodeException.class);
@@ -76,7 +72,5 @@ public class ExperitestCredentialsTest {
             List<ExperitestCredentials> credentials = CredentialsProvider.lookupCredentials(ExperitestCredentials.class, (Item) null, ACL.SYSTEM, null, null);
             Assert.assertEquals(0, credentials.size());
         }
-
-
     }
 }

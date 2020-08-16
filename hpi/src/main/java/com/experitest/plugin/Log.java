@@ -2,7 +2,6 @@ package com.experitest.plugin;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.logging.*;
 
