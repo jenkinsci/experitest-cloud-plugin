@@ -1,6 +1,7 @@
 package hudson.plugins.experitest;
 
 import com.experitest.plugin.ExperitestCredentials;
+import com.experitest.plugin.Log;
 import com.experitest.plugin.Utils;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class ExperitestProjectAction implements Action {
     private final AbstractProject<?, ?> project;
+    private static final Log LOG = Log.get(ExperitestProjectAction.class);
 
     public ExperitestProjectAction(AbstractProject<?, ?> project) {
         this.project = project;
@@ -58,7 +60,7 @@ public class ExperitestProjectAction implements Action {
                     "\"keys\":[\"browserName\",\"device.name\"]}")
                 .asJson();
         } catch (UnirestException e) {
-            e.printStackTrace();
+           LOG.error("", e);
         }
         if (response == null) {
             return Collections.emptyList();
@@ -66,10 +68,6 @@ public class ExperitestProjectAction implements Action {
         Object data = response.getBody().getObject().get("data");
         List<ReportDto> reportDto = ReportDto.readValueMapType(data.toString());
         reportDto.forEach(r -> r.setBaseUrl(baseUrl));
-
-        if (reportDto.isEmpty()) {
-            return Collections.emptyList();
-        }
         return reportDto;
     }
 }

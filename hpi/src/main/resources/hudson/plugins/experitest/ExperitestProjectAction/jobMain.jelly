@@ -11,13 +11,13 @@
                 <th>Report</th>
             </tr>
         </thead>
-        <j:forEach var="i" items="${it.reportsDto}">
+        <j:forEach var="report" items="${it.reportsDto}">
             <tr>
-                <td>${i.getName()}</td>
-                <td>${i.getStatus()}</td>
-                <td>${i.getToolName()}</td>
+                <td>${report.getName()}</td>
+                <td>${report.getStatus()}</td>
+                <td>${report.getToolName()}</td>
                 <td>
-                    <a href="${i.getReportLink()}" target="_blank">Link</a>
+                    <a href="${report.getReportLink()}" target="_blank">Link</a>
                 </td>
             </tr>
         </j:forEach>

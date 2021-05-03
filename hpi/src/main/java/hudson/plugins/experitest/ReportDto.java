@@ -1,5 +1,6 @@
 package hudson.plugins.experitest;
 
+import com.experitest.plugin.Log;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,6 +13,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportDto {
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Log LOG = Log.get(ReportDto.class);
 
     @JsonProperty("name")
     private String name;
@@ -49,7 +51,6 @@ public class ReportDto {
 
     public String getReportLink() {
         return baseUrl + "/reporter/html-report/index.html?test_id=" + testId;
-
     }
 
     public String getStatus() {
@@ -65,7 +66,7 @@ public class ReportDto {
             return mapper.readValue(content, new TypeReference<List<ReportDto>>() {
             });
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOG.error("", e);
         }
         return Collections.emptyList();
     }
