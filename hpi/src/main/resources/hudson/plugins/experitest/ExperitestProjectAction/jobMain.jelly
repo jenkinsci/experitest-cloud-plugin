@@ -1,0 +1,25 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core">
+
+    <h2>Experitest build results</h2>
+    <table id="results" class="pane bigtable sortable stripped-odd">
+        <thead>
+            <tr style="text-align:left">
+                <th>Test Name</th>
+                <th>Status</th>
+                <th>Device/Browser</th>
+                <th>Report</th>
+            </tr>
+        </thead>
+        <j:forEach var="i" items="${it.reportsDto}">
+            <tr>
+                <td>${i.getName()}</td>
+                <td>${i.getStatus()}</td>
+                <td>${i.getToolName()}</td>
+                <td>
+                    <a href="${i.getReportLink()}" target="_blank">Link</a>
+                </td>
+            </tr>
+        </j:forEach>
+    </table>
+</j:jelly>

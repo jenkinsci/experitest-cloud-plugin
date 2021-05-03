@@ -1,0 +1,14 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+    <h2>Experitest Reports</h2>
+    <l:layout title="Greeting">
+        <l:side-panel>
+            <st:include page="sidepanel.jelly" it="${it.run}" optional="true"/>
+            ${it.myString}
+        </l:side-panel>
+        <l:main-panel>
+            ${it.myString}
+            <st:include page="sidepanel.jelly" it="${it.run}" optional="true"/>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

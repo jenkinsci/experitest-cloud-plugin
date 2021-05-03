@@ -13,7 +13,7 @@ import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.ListBoxModel;
-import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.ExportedBean;
 
@@ -82,6 +82,10 @@ public class ExecutorBuildStep extends Builder implements Serializable {
 
     @Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException {
+        JSONObject reporterTags = new JSONObject(this.runTags);
+        String value = build.getProject().getName() + "-" + build.number;
+        reporterTags.put("jenkins", value);
+
         ExperitestCredentials cred = Utils.getExperitestCredentials(build);
         String baseUrl = cred.getApiUrlNormalize();
         String appApiUrl = String.format("%s/api/v1/test-run/execute-test-run", baseUrl);
@@ -90,16 +94,13 @@ public class ExecutorBuildStep extends Builder implements Serializable {
             .header(AUTHORIZATION, secret)
             .queryString("executionType", FrameworkType.valueOf(this.frameworkType).getLabel())
             .queryString("runningType", RunningType.valueOf(this.runningType).getLabel())
+            .queryString("runTags", reporterTags)
             .queryString("deviceQueries", this.deviceQueries)
             .field("app", new File(this.app))
             .field("testApp", new File(this.testApplication));
 
-        if (StringUtils.isNotBlank(this.runTags)) {
-            body.field("runTags", this.runTags);
-        }
-
         Utils.applyFields(body, this.executorOptions);
-        boolean result =  Utils.postBody(body, listener.getLogger());
+        boolean result = Utils.postBody(body, listener.getLogger());
         listener.getLogger().println("Result= " + result);
         return result;
     }
