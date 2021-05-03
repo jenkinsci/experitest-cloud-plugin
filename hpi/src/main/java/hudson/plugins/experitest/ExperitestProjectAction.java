@@ -7,6 +7,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.body.RequestBodyEntity;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
@@ -48,24 +49,23 @@ public class ExperitestProjectAction implements Action {
         ExperitestCredentials cred = Utils.getExperitestCredentials(lastCompletedBuild);
         String baseUrl = cred.getApiUrlNormalize();
         String secret = String.format("Bearer %s", cred.getSecretKey().getPlainText());
-
-        HttpResponse<JsonNode> response = null;
+        String value = project.getName() + "-" + lastCompletedBuild.number;
+        RequestBodyEntity response = Unirest.post(baseUrl + "/reporter/api/tests/list")
+            .header("Content-Type", "application/json")
+            .header(HttpHeaders.AUTHORIZATION, secret)
+            .body("{\"returnTotalCount\":true, \"limit\":100, \"page\":1, \"sort\":[{\"property\":\"test_id\",\"descending\":false}],\r\n" +
+                "\"filter\":[{\"property\":\"jenkins\",\"operator\":\"=\",\"value\":\"" + value + "\"}],\r\n" +
+                "\"keys\":[\"browserName\",\"device.name\"]}");
+        HttpResponse<JsonNode> json = null;
         try {
-            String value = project.getName() + "-" + lastCompletedBuild.number;
-            response = Unirest.post(baseUrl + "/reporter/api/tests/list")
-                .header("Content-Type", "application/json")
-                .header(HttpHeaders.AUTHORIZATION, secret)
-                .body("{\"returnTotalCount\":true, \"limit\":100, \"page\":1, \"sort\":[{\"property\":\"test_id\",\"descending\":false}],\r\n" +
-                    "\"filter\":[{\"property\":\"jenkins\",\"operator\":\"=\",\"value\":\"" + value + "\"}],\r\n" +
-                    "\"keys\":[\"browserName\",\"device.name\"]}")
-                .asJson();
+            json = response.asJson();
         } catch (UnirestException e) {
-           LOG.error("", e);
+            LOG.error("error while parsing response to JSON " + e.getMessage());
         }
-        if (response == null) {
+        if (json == null) {
             return Collections.emptyList();
         }
-        Object data = response.getBody().getObject().get("data");
+        Object data = json.getBody().getObject().get("data");
         List<ReportDto> reportDto = ReportDto.readValueMapType(data.toString());
         reportDto.forEach(r -> r.setBaseUrl(baseUrl));
         return reportDto;

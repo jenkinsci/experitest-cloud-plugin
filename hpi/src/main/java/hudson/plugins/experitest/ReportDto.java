@@ -66,7 +66,7 @@ public class ReportDto {
             return mapper.readValue(content, new TypeReference<List<ReportDto>>() {
             });
         } catch (JsonProcessingException e) {
-            LOG.error("", e);
+            LOG.error("Error while trying to read List<ReportDto>: " + e.getMessage());
         }
         return Collections.emptyList();
     }
