@@ -3,15 +3,10 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:st="jelly:stapler" >
 
     <f:entry field="credentialsId" title="Credentials">
-        <c:select context="com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl" />
+        <c:select context="com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"/>
     </f:entry>
 
-    <!--f:entry title="Application Location" field="applicationLocation">
-        <f:textbox clazz="required" placeholder="ex: /applications/test-android.apk"/>
+    <f:entry field="availableBrowsers" title="Browsers">
+        <f:select multiple="multiple"/>
     </f:entry>
-
-    <f:advanced>
-        <f:property field="extraArguments" />
-        <f:optionalProperty field="keystoreInfo" title="Custom Keystore (optional for Android)"/>
-    </f:advanced-->
 </j:jelly>
