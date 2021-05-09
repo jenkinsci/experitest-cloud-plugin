@@ -1,8 +1,10 @@
 package hudson.plugins.experitest;
 
 import com.experitest.plugin.ExperitestCredentials;
-import com.experitest.plugin.Log;
-import com.experitest.plugin.Utils;
+import com.experitest.plugin.utils.Jackson;
+import com.experitest.plugin.utils.Log;
+import com.experitest.plugin.utils.Utils;
+import com.experitest.plugin.model.ReportDTO;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -11,6 +13,7 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
+import java.util.Optional;
 import org.apache.http.HttpHeaders;
 
 import java.util.Collections;
@@ -41,7 +44,7 @@ public class ExperitestProjectAction implements Action {
         return "experitest-reports";
     }
 
-    public List<ReportDto> getReportsDto() {
+    public List<ReportDTO> getReportsDto() {
         if (project == null || project.getLastCompletedBuild() == null) {
             return Collections.emptyList();
         }
@@ -62,11 +65,12 @@ public class ExperitestProjectAction implements Action {
         } catch (UnirestException e) {
             LOG.error("error while parsing response to JSON " + e.getMessage());
         }
-        if (json == null) {
+        if (json == null || !json.getBody().getObject().has("data")) {
             return Collections.emptyList();
         }
+
         Object data = json.getBody().getObject().get("data");
-        List<ReportDto> reportDto = ReportDto.readValueMapType(data.toString());
+        List<ReportDTO> reportDto = Optional.ofNullable(Jackson.readValue(data.toString(), Jackson.REPORT_DTO_LIST_TYPE)).orElse(Collections.emptyList());
         reportDto.forEach(r -> r.setBaseUrl(baseUrl));
         return reportDto;
     }

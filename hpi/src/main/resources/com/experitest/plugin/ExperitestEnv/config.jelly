@@ -9,4 +9,8 @@
     <f:entry field="availableBrowsers" title="Browsers">
         <f:select multiple="multiple"/>
     </f:entry>
+
+    <f:entry field="availableDevices" title="Devices">
+        <f:select multiple="multiple"/>
+    </f:entry>
 </j:jelly>

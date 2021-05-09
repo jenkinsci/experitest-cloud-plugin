@@ -1,5 +1,8 @@
-package com.experitest.plugin;
+package com.experitest.plugin.utils;
 
+import com.experitest.plugin.ApiField;
+import com.experitest.plugin.ExperitestCredentials;
+import com.experitest.plugin.ExperitestEnv;
 import com.experitest.plugin.error.ApiException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;

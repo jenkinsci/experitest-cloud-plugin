@@ -1,7 +1,7 @@
 package com.experitest.plugin.advanced;
 
 import com.experitest.plugin.ApiField;
-import com.experitest.plugin.Utils;
+import com.experitest.plugin.utils.Utils;
 import com.experitest.plugin.error.IllegalConfigException;
 import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;
