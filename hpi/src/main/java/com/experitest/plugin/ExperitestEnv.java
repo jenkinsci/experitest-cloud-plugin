@@ -153,7 +153,7 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
         private List<DeviceDTO> getAllDevices(String credentialsId) {
             String devicesJson = getAllDevicesFromApi(credentialsId);
             if (devicesJson == null) {
-                return new ArrayList<>();
+                return Collections.emptyList();
             }
 
             return Optional.ofNullable(Jackson.readValue(devicesJson, Jackson.DEVICE_DTO_LIST_TYPE)).orElse(Collections.emptyList());
