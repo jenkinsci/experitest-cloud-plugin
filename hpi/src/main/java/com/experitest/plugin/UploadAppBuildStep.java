@@ -3,6 +3,8 @@ package com.experitest.plugin;
 import com.experitest.plugin.advanced.ExtraArguments;
 import com.experitest.plugin.advanced.KeystoreInfo;
 import com.experitest.plugin.i18n.Messages;
+import com.experitest.plugin.utils.Log;
+import com.experitest.plugin.utils.Utils;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;

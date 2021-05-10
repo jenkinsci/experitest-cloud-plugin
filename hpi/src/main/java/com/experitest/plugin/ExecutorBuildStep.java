@@ -4,6 +4,8 @@ import com.experitest.plugin.advanced.ExecutorOptions;
 import com.experitest.plugin.enu.FrameworkType;
 import com.experitest.plugin.enu.RunningType;
 import com.experitest.plugin.i18n.Messages;
+import com.experitest.plugin.utils.Log;
+import com.experitest.plugin.utils.Utils;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.body.MultipartBody;
 import hudson.Extension;
@@ -13,6 +15,7 @@ import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.ListBoxModel;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -82,7 +85,9 @@ public class ExecutorBuildStep extends Builder implements Serializable {
 
     @Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException {
-        JSONObject reporterTags = new JSONObject(this.runTags);
+        JSONObject reporterTags = StringUtils.isBlank(this.runTags)
+            ? new JSONObject()
+            : new JSONObject(this.runTags);
         String value = build.getProject().getName() + "-" + build.number;
         reporterTags.put("jenkins", value);
 
@@ -134,11 +139,5 @@ public class ExecutorBuildStep extends Builder implements Serializable {
             }
             return m;
         }
-
-//        public String getBuildNumber() {
-////            Jenkins.getActiveInstance().lookup.get(Item.class).getAllJobs()
-//
-//            return System.getenv("BUILD_NUMBER");
-//        }
     }
 }

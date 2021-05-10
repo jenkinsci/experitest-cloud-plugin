@@ -3,9 +3,9 @@ package com.experitest.plugin;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.experitest.plugin.i18n.Messages;
 import com.experitest.plugin.model.BrowserDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.experitest.plugin.model.DeviceDTO;
+import com.experitest.plugin.utils.Jackson;
+import com.experitest.plugin.utils.Log;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -34,16 +34,17 @@ import java.io.Serializable;
 public class ExperitestEnv extends BuildWrapper implements Serializable {
 
     private static final Log LOG = Log.get(ExperitestEnv.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private String credentialsId;
     private List<BrowserDTO> chosenBrowsers;
+    private List<DeviceDTO> chosenDevices;
 
     @DataBoundConstructor
-    public ExperitestEnv(String credentialsId, List<String> availableBrowsers) {
+    public ExperitestEnv(String credentialsId, List<String> availableBrowsers, List<String> availableDevices) {
         this();
         this.credentialsId = credentialsId;
         this.chosenBrowsers = parseBrowsers(availableBrowsers);
+        this.chosenDevices = parseDevices(availableDevices);
     }
 
     public ExperitestEnv() {
@@ -55,37 +56,33 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
     }
 
     private List<BrowserDTO> parseBrowsers(List<String> availableBrowsers) {
-        TypeReference<BrowserDTO> browserDtoType = new TypeReference<BrowserDTO>() { };
         return availableBrowsers.stream()
-            .map(browserString -> {
-                try {
-                    return MAPPER.readValue(browserString, browserDtoType);
-                } catch (JsonProcessingException e) {
-                    LOG.error("Could not parse browserString: " + browserString);
-                }
-                return new BrowserDTO();
-            })
+            .map(browserString -> Optional.ofNullable(Jackson.readValue(browserString, Jackson.BROWSER_DTO_TYPE)).orElse(new BrowserDTO()))
+            .collect(Collectors.toList());
+    }
+
+    private List<DeviceDTO> parseDevices(List<String> availableDevices) {
+        return availableDevices.stream()
+            .map(deviceString -> Optional.ofNullable(Jackson.readValue(deviceString, Jackson.DEVICE_DTO_TYPE)).orElse(new DeviceDTO()))
             .collect(Collectors.toList());
     }
 
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) {
-        LOG.info("Creating environment variables: start");
+        LOG.info("Creating environment variables");
 
         return new Environment() {
 
             @Override
             public void buildEnvVars(Map<String, String> env) {
                 if (chosenBrowsers != null) {
-                    String browsersJson = null;
-                    try {
-                        browsersJson = MAPPER.writeValueAsString(chosenBrowsers);
-                    } catch (JsonProcessingException e) {
-                        LOG.error("could not convert browsers to json: " + e.getMessage());
-                    }
+                    String browsersJson = Jackson.writeValueAsString(chosenBrowsers);
                     env.put("CONTINUOUS_TESTING_BROWSERS", browsersJson);
                 }
-                LOG.info("Creating environment variables: end");
+                if (chosenDevices != null) {
+                    String devicesJson = Jackson.writeValueAsString(chosenDevices);
+                    env.put("CONTINUOUS_TESTING_DEVICES", devicesJson);
+                }
             }
         };
     }
@@ -93,11 +90,13 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
     @Extension
     public static class DescriptorImpl extends Descriptor<BuildWrapper> {
 
-        @SuppressWarnings("unchecked")
-        private String getDataFromResponseBody(String body) throws JsonProcessingException {
-            Map<String, Object> bodyParts = MAPPER.readValue(body, Map.class);
+        private String getDataFromResponseBody(String body) {
+            Map<String, Object> bodyParts = Jackson.readValueMapType(body);
+            if (bodyParts == null) {
+                return null;
+            }
             Object data = bodyParts.get("data");
-            return MAPPER.writeValueAsString(data);
+            return Jackson.writeValueAsString(data);
         }
 
         private String getAllBrowsersFromApi(String credentialsId) {
@@ -114,7 +113,28 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
             try {
                 HttpResponse<String> response = result.asString();
                 return getDataFromResponseBody(response.getBody());
-            } catch (UnirestException | JsonProcessingException e) {
+            } catch (UnirestException e) {
+                LOG.error("error while getting api response: " + e.getMessage());
+            }
+
+            return null;
+        }
+
+        private String getAllDevicesFromApi(String credentialsId) {
+            ExperitestCredentials cred = ExperitestCredentials.getCredentials(credentialsId);
+            if (cred == null) {
+                return null;
+            }
+            String baseUrl = cred.getApiUrlNormalize();
+            String appApiUrl = String.format("%s/api/v1/devices", baseUrl);
+            String secret = String.format("Bearer %s", cred.getSecretKey().getPlainText());
+            GetRequest result = Unirest.get(appApiUrl).header("authorization", secret);
+
+            Unirest.setTimeouts(0, 0); //set infinite timeout for post request
+            try {
+                HttpResponse<String> response = result.asString();
+                return getDataFromResponseBody(response.getBody());
+            } catch (UnirestException e) {
                 LOG.error("error while getting api response: " + e.getMessage());
             }
 
@@ -124,16 +144,19 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
         private List<BrowserDTO> getAllBrowsers(String credentialsId) {
             String browsersJson = getAllBrowsersFromApi(credentialsId);
             if (browsersJson == null) {
-                return new ArrayList<>();
+                return Collections.emptyList();
             }
 
-            TypeReference<List<BrowserDTO>> browserDtoListType = new TypeReference<List<BrowserDTO>>() { };
-            try {
-                return MAPPER.readValue(browsersJson, browserDtoListType);
-            } catch (JsonProcessingException e) {
-                LOG.error("error parsing browsers list: " + e.getMessage());
+            return Optional.ofNullable(Jackson.readValue(browsersJson, Jackson.BROWSER_DTO_LIST_TYPE)).orElse(Collections.emptyList());
+        }
+
+        private List<DeviceDTO> getAllDevices(String credentialsId) {
+            String devicesJson = getAllDevicesFromApi(credentialsId);
+            if (devicesJson == null) {
+                return Collections.emptyList();
             }
-            return new ArrayList<>();
+
+            return Optional.ofNullable(Jackson.readValue(devicesJson, Jackson.DEVICE_DTO_LIST_TYPE)).orElse(Collections.emptyList());
         }
 
         @Nonnull
@@ -157,6 +180,16 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
 
             ListBoxModel m = new ListBoxModel();
             allBrowsers.forEach(browser -> m.add(new Option(browser.getDisplayName(), browser.toString())));
+            return m;
+        }
+
+        @SuppressWarnings("unused") // used by jelly
+        public ListBoxModel doFillAvailableDevicesItems(@QueryParameter String credentialsId) {
+            List<DeviceDTO> allBrowsers = getAllDevices(credentialsId);
+            allBrowsers.sort(Comparator.comparing(DeviceDTO::getDisplayName));
+
+            ListBoxModel m = new ListBoxModel();
+            allBrowsers.forEach(device -> m.add(new Option(device.getDisplayName(), device.toString())));
             return m;
         }
     }

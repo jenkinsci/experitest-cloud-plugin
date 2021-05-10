@@ -1,4 +1,4 @@
-package com.experitest.plugin;
+package com.experitest.plugin.utils;
 
 import org.apache.commons.lang3.ArrayUtils;
 

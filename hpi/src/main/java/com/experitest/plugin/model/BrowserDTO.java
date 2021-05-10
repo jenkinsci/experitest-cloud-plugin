@@ -1,7 +1,9 @@
 package com.experitest.plugin.model;
 
+import com.experitest.plugin.utils.Jackson;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class BrowserDTO implements Serializable {
 
@@ -75,13 +77,28 @@ public class BrowserDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "{" +
-            "\"browserName\":\"" + browserName + '\"' +
-            ", \"browserVersion\":\"" + browserVersion + '\"' +
-            ", \"platform\":\"" + platform + '\"' +
-            ", \"osName\":\"" + osName + '\"' +
-            ", \"agentName\":\"" + agentName + '\"' +
-            ", \"region\":\"" + region + '\"' +
-            '}';
+        return Jackson.writeValueAsString(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BrowserDTO that = (BrowserDTO) o;
+        return Objects.equals(browserName, that.browserName)
+            && Objects.equals(browserVersion, that.browserVersion)
+            && Objects.equals(platform, that.platform)
+            && Objects.equals(osName, that.osName)
+            && Objects.equals(agentName, that.agentName)
+            && Objects.equals(region, that.region);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(browserName, browserVersion, platform, osName, agentName, region);
     }
 }
