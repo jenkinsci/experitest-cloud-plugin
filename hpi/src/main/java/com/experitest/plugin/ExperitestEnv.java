@@ -20,8 +20,6 @@ import hudson.security.ACL;
 import hudson.tasks.BuildWrapper;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -29,6 +27,8 @@ import org.kohsuke.stapler.export.ExportedBean;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @ExportedBean
 public class ExperitestEnv extends BuildWrapper implements Serializable {
@@ -185,11 +185,11 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
 
         @SuppressWarnings("unused") // used by jelly
         public ListBoxModel doFillAvailableDevicesItems(@QueryParameter String credentialsId) {
-            List<DeviceDTO> allBrowsers = getAllDevices(credentialsId);
-            allBrowsers.sort(Comparator.comparing(DeviceDTO::getDisplayName));
+            List<DeviceDTO> allDevices = getAllDevices(credentialsId);
+            allDevices.sort(Comparator.comparing(DeviceDTO::getDisplayName));
 
             ListBoxModel m = new ListBoxModel();
-            allBrowsers.forEach(device -> m.add(new Option(device.getDisplayName(), device.toString())));
+            allDevices.forEach(device -> m.add(new Option(device.getDisplayName(), device.toString())));
             return m;
         }
     }

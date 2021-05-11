@@ -2,24 +2,40 @@
 <j:jelly xmlns:j="jelly:core">
 
     <h2>Experitest build results</h2>
-    <table id="results" class="pane bigtable sortable stripped-odd">
-        <thead>
-            <tr style="text-align:left">
-                <th>Test Name</th>
-                <th>Status</th>
-                <th>Device/Browser</th>
-                <th>Report</th>
-            </tr>
-        </thead>
-        <j:forEach var="report" items="${it.reportsDto}">
-            <tr>
-                <td>${report.getName()}</td>
-                <td>${report.getStatus()}</td>
-                <td>${report.getToolName()}</td>
-                <td>
-                    <a href="${report.getReportLink()}" target="_blank">Link</a>
-                </td>
-            </tr>
-        </j:forEach>
-    </table>
+    <j:choose>
+        <j:when test="${empty(it.errorMsg)}">
+            <table id="results" class="pane bigtable sortable stripped-odd">
+                <thead>
+                    <tr style="text-align:left">
+                        <th>Test Name</th>
+                        <th>Status</th>
+                        <th>Device/Browser</th>
+                        <th>Report</th>
+                    </tr>
+                </thead>
+                <j:forEach var="report" items="${it.reportsDto}">
+                    <tr>
+                        <td>${report.getName()}</td>
+                        <td>${report.getStatus()}</td>
+                        <td>${report.getToolName()}</td>
+                        <td>
+                            <a href="${report.getReportLink()}" target="_blank">Link</a>
+                        </td>
+                    </tr>
+                </j:forEach>
+            </table>
+        </j:when>
+        <j:otherwise>
+            <div>
+                <h3>${it.errorMsg}</h3>
+                <j:choose>
+                    <j:when test="${it.errorMsg.contains('credentials')}">
+                        <h3>See how to configure it
+                            <a href="https://docs.experitest.com/display/TE/Jenkins+Plugin" target="_blank">here</a>
+                        </h3>
+                    </j:when>
+                </j:choose>
+            </div>
+        </j:otherwise>
+    </j:choose>
 </j:jelly>
