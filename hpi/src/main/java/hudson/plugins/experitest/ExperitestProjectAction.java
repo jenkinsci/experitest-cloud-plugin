@@ -44,6 +44,19 @@ public class ExperitestProjectAction implements Action {
         return "experitest-reports";
     }
 
+    public String getErrorMsg() {
+        if (project == null || project.getLastCompletedBuild() == null){
+            return "Execute your first build to see test results";
+        }
+
+        try {
+            Utils.getExperitestCredentials(project.getLastCompletedBuild());
+        } catch (Exception e) {
+            return "Please provide credentials to Experitest Cloud.";
+        }
+        return "";
+    }
+
     public List<ReportDTO> getReportsDto() {
         if (project == null || project.getLastCompletedBuild() == null) {
             return Collections.emptyList();
