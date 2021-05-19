@@ -71,7 +71,7 @@ public class ExperitestProjectAction implements Action {
             .header(HttpHeaders.AUTHORIZATION, secret)
             .body("{\"returnTotalCount\":true, \"limit\":100, \"page\":1, \"sort\":[{\"property\":\"test_id\",\"descending\":false}],\r\n" +
                 "\"filter\":[{\"property\":\"jenkins\",\"operator\":\"=\",\"value\":\"" + value + "\"}],\r\n" +
-                "\"keys\":[\"browserName\",\"device.name\"]}");
+                "\"keys\":[\"browserName\",\"device.name\",\"os.name\",\"browserVersion\"]}");
         HttpResponse<JsonNode> json = null;
         try {
             json = response.asJson();
