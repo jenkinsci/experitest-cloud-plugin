@@ -9,7 +9,7 @@ public class ReportDtoTest {
     @Test
     public void toolNameBrowserTest() {
         ReportDTO example = TestSubjects.getReportDtoBrowserTestSubject();
-        Assert.assertEquals(example.getBrowserName(), example.getToolName());
+        Assert.assertEquals(example.getBrowserName() + " " + example.getBrowserVersion() + " " + example.getOsName(), example.getToolName());
     }
 
     @Test

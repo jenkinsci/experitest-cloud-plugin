@@ -87,6 +87,8 @@ public class TestSubjects {
     public static ReportDTO getReportDtoBrowserTestSubject() {
         ReportDTO reportDTO = getGeneralReportDtoTestSubject();
         reportDTO.setBrowserName("browserName");
+        reportDTO.setOsName("osName");
+        reportDTO.setBrowserVersion("browserVersion");
         return reportDTO;
     }
 

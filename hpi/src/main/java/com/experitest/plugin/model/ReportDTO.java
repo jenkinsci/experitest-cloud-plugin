@@ -13,7 +13,10 @@ public class ReportDTO {
     private long testId;
     @JsonProperty("device.name")
     private String deviceName;
+    @JsonProperty("os.name")
+    private String osName;
     private String browserName;
+    private String browserVersion;
     private String baseUrl;
 
     public String getName() {
@@ -60,16 +63,32 @@ public class ReportDTO {
         this.deviceName = deviceName;
     }
 
+    public String getOsName() {
+        return osName;
+    }
+
+    public void setOsName(String osName) {
+        this.osName = osName;
+    }
+
+    public String getBrowserVersion() {
+        return browserVersion;
+    }
+
+    public void setBrowserVersion(String browserVersion) {
+        this.browserVersion = browserVersion;
+    }
+
     public void setBrowserName(String browserName) {
         this.browserName = browserName;
     }
 
     public String getReportLink() {
-        return baseUrl + "/reporter/html-report/index.html?test_id=" + testId;
+        return baseUrl + "/reporter/#/test/" + testId;
     }
 
     public String getToolName() {
-        return browserName == null ? deviceName : browserName;
+        return browserName == null ? deviceName : browserName + " " + browserVersion + " " + osName;
     }
 
     @Override
