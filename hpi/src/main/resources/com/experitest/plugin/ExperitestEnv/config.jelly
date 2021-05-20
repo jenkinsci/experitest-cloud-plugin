@@ -1,6 +1,8 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials" xmlns:st="jelly:stapler" >
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+
+    <script src="${resURL}/plugin/experitest-cloud/multi-select.js"/>
 
     <f:entry field="credentialsId" title="Credentials">
         <c:select context="com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"/>
@@ -13,4 +15,74 @@
     <f:entry field="availableDevices" title="Devices">
         <f:select multiple="multiple"/>
     </f:entry>
+
+    <script>
+        //Browsers
+        var currentBrowserSelect;
+        var optionBrowserName = "_.availableBrowsers";
+        var multiBrowserSelect = new IconicMultiSelect({
+            select: optionBrowserName,
+            placeholder: "Select browser(s)",
+            noData: "Browsers not found."
+        })
+        var myInterval = setInterval(function () {
+            var ele = document.getElementsByName(optionBrowserName)[0];
+            if (document.getElementsByName("_.credentialsId")[0].selectedIndex !== undefined &amp;&amp;
+                ele !== undefined &amp;&amp; ele.options.length > 0) {
+                multiBrowserSelect.init();
+                currentBrowserSelect = ele.options.length;
+                document.getElementsByName("_.credentialsId")[0].addEventListener("change", selectBrowserFunction);
+                clearInterval(myInterval);
+            }
+        }, 500);
+
+        function selectBrowserFunction() {
+            myInterval = setInterval(function () {
+                var ele = document.getElementsByName(optionBrowserName)[0];
+                if (document.getElementsByName("_.credentialsId")[0].selectedIndex !== undefined &amp;&amp;
+                    ele !== undefined &amp;&amp;
+                    currentBrowserSelect !== ele.options.length &amp;&amp;
+                    ele.options.length > 0) {
+
+                    currentBrowserSelect = ele.options.length;
+                    multiBrowserSelect.reload();
+                    clearInterval(myInterval);
+                }
+            }, 500);
+        }
+
+        //Devices
+        var currentDeviceSelect;
+        var optionDeviceName = "_.availableDevices"
+        var multiDeviceSelect = new IconicMultiSelect({
+            select: optionDeviceName,
+            placeholder: "Select device(s)",
+            noData: "Device not found."
+        })
+        var deviceInterval = setInterval(function () {
+            var ele = document.getElementsByName(optionDeviceName)[0];
+            if (document.getElementsByName("_.credentialsId")[0].selectedIndex !== undefined &amp;&amp;
+                ele !== undefined &amp;&amp; ele.options.length > 0) {
+                multiDeviceSelect.init();
+                currentDeviceSelect = ele.options.length;
+                document.getElementsByName("_.credentialsId")[0].addEventListener("change", selectDeviceFunction);
+                clearInterval(deviceInterval);
+            }
+        }, 500);
+
+        function selectDeviceFunction() {
+            deviceInterval = setInterval(function () {
+                var ele = document.getElementsByName(optionDeviceName)[0];
+                if (document.getElementsByName("_.credentialsId")[0].selectedIndex !== undefined &amp;&amp;
+                    ele !== undefined &amp;&amp; ele.options.length !== currentDeviceSelect &amp;&amp;
+                    ele.options.length > 0) {
+
+                    currentDeviceSelect = ele.options.length;
+                    multiDeviceSelect.reload();
+                    clearInterval(deviceInterval);
+                }
+            }, 500);
+
+        }
+    </script>
 </j:jelly>
