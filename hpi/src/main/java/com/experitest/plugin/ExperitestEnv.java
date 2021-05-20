@@ -168,7 +168,6 @@ public class ExperitestEnv extends BuildWrapper implements Serializable {
         @SuppressWarnings("unused") // used by jelly
         public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Item context, @QueryParameter String credentialsId) {
             return new StandardListBoxModel()
-//                .includeEmptyValue()
                 .includeAs(ACL.SYSTEM, context, ExperitestCredentials.class)
                 .includeCurrentValue(credentialsId);
         }
