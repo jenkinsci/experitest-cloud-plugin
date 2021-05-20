@@ -84,7 +84,7 @@ public class ReportDTO {
     }
 
     public String getReportLink() {
-        return baseUrl + "/reporter/#/test/" + testId;
+        return baseUrl + "/reporter/html-report/index.html?test_id=" + testId;
     }
 
     public String getToolName() {
