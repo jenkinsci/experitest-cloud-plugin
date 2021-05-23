@@ -2,6 +2,7 @@
 <j:jelly xmlns:j="jelly:core">
 
     <h2>Experitest build results</h2>
+    <h4>To view the reports, please make sure you are logged in to your Continuous Testing Cloud</h4>
     <j:choose>
         <j:when test="${empty(it.errorMsg)}">
             <table id="results" class="pane bigtable sortable stripped-odd">
