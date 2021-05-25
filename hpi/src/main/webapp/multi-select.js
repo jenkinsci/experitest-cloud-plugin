@@ -34,6 +34,32 @@ class IconicMultiSelect {
         this.placeholder = placeholder ?? "Select...";
         this.selectName = select;
         this.onlyOnce = true;
+        this.start(select);
+    }
+
+    start(select) {
+        const self = this;
+        let initInterval = setInterval(function () {
+            let credentialsElement = document.getElementsByName("_.credentialsId")[0];
+            const ele = document.getElementsByName(select)[0];
+            let currentBrowserSelect;
+            if (credentialsElement.selectedIndex !== undefined && ele !== undefined && ele.options.length > 0) {
+                self.init();
+                currentBrowserSelect = ele.options.length;
+
+                credentialsElement.addEventListener("change", () => {
+                    let onChangeInterval = setInterval(function () {
+                        if (credentialsElement.selectedIndex !== undefined && ele !== undefined &&
+                            currentBrowserSelect !== ele.options.length && ele.options.length > 0) {
+                            currentBrowserSelect = ele.options.length;
+                            self.reload();
+                            clearInterval(onChangeInterval);
+                        }
+                    }, 500);
+                });
+                clearInterval(initInterval);
+            }
+        }, 500);
     }
 
     /**
