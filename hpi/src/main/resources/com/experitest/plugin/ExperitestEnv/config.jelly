@@ -24,6 +24,7 @@
             noData: "Browsers not found."
         })
 
+        //Devices
         new IconicMultiSelect({
             select: "_.availableDevices",
             placeholder: "Select device(s)",
