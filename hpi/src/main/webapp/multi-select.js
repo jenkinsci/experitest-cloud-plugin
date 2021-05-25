@@ -75,16 +75,7 @@ class IconicMultiSelect {
                 this._renderMultiselect();
                 this.onlyOnce = false;
             }
-            this._renderOptionsList();
-
-            this.domElements = {
-                clear: document.querySelector(`.${this.prefix + "multiselect__clear-btn"}`),
-                input: document.querySelector(`.${this.prefix + "multiselect__input"}`),
-                optionsContainer: document.querySelector(`.${this.prefix + "multiselect__options"}`),
-                optionsContainerList: document.querySelector(`.${this.prefix + "multiselect__options > ul"}`),
-                options: document.querySelectorAll(`.${this.prefix + "multiselect__options"} > ul > li`),
-            };
-
+            this.initDom();
             this._enableEventListeners();
         } else {
             throw new Error(`The selector '${document.getElementsByName(this.selectName)}' did not select any valid select tag.`);
@@ -109,10 +100,35 @@ class IconicMultiSelect {
             this.domElements.clear.click();
         }
         //remove old HTML
-
         this._removeRenderOptionsList();
-        // init again only with thr new options
-        this.init();
+        // init again only with the new options
+
+        if (document.getElementsByName(this.selectName) &&
+            document.getElementsByName(this.selectName)[0].nodeName === "SELECT") {
+            this.options = this._getDataFromSelectTag();
+            this.initDom();
+
+            this.domElements.options.forEach((option) => {
+                option.addEventListener("click", ({target}) => {
+                    this._handleOption(target);
+                });
+            });
+
+        } else {
+            throw new Error(`The selector '${document.getElementsByName(this.selectName)}' did not select any valid select tag.`);
+        }
+    }
+
+    initDom() {
+        this._renderOptionsList();
+
+        this.domElements = {
+            clear: document.querySelector(`.${this.prefix + "multiselect__clear-btn"}`),
+            input: document.querySelector(`.${this.prefix + "multiselect__input"}`),
+            optionsContainer: document.querySelector(`.${this.prefix + "multiselect__options"}`),
+            optionsContainerList: document.querySelector(`.${this.prefix + "multiselect__options > ul"}`),
+            options: document.querySelectorAll(`.${this.prefix + "multiselect__options"} > ul > li`),
+        };
     }
 
     /**
