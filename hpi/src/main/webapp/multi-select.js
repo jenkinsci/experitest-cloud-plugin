@@ -47,7 +47,8 @@ class IconicMultiSelect {
                 self.init();
                 currentBrowserSelect = ele.options.length;
 
-                credentialsElement.addEventListener("change", () => {
+                document.getElementsByName("_.credentialsId").
+                forEach((e) => e.addEventListener("change", () => {
                     let onChangeInterval = setInterval(function () {
                         if (credentialsElement.selectedIndex !== undefined && ele !== undefined &&
                             currentBrowserSelect !== ele.options.length && ele.options.length > 0) {
@@ -56,7 +57,7 @@ class IconicMultiSelect {
                             clearInterval(onChangeInterval);
                         }
                     }, 500);
-                });
+                }));
                 clearInterval(initInterval);
             }
         }, 500);
